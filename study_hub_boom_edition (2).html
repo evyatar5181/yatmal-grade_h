@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDY HUB - BOOM Edition</title>
+    <!-- Google Fonts & Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --primary: #00fbff;
+            --secondary: #ff00ff;
+            --bg: #050505;
+            --card-bg: rgba(20, 20, 25, 0.85);
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: crosshair;
+            user-select: none;
+            font-family: 'Assistant', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        /* Particle Background Container */
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        /* Explosion Flash Overlay */
+        #flash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10000;
+            transition: opacity 0.05s;
+        }
+
+        /* Entry Animations */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            z-index: 10;
+            animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: moveGradient 4s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(255,0,255,0.6));
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        /* Grid section for top links */
+        .top-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 2px solid #333344;
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(0, 251, 255, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-link {
+            display: block;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #444;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .btn-link:hover {
+            background: var(--primary);
+            color: #000000 !important;
+            box-shadow: 0 0 18px rgba(0, 251, 255, 0.7);
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .mashov-special {
+            background: linear-gradient(45deg, #00c853, #b2ff59);
+            color: black !important;
+            animation: pulse 1.2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); box-shadow: 0 0 10px rgba(0,200,83,0.4); }
+            to { transform: scale(1.03); box-shadow: 0 0 22px rgba(178,255,89,0.8); }
+        }
+
+        /* Screen Shake Animation */
+        .shake-active {
+            animation: shake 0.15s ease-in-out;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(6px, -6px); }
+            50% { transform: translate(-6px, 6px); }
+            75% { transform: translate(6px, 6px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Floating Boom Text */
+        .boom-text {
+            position: fixed;
+            pointer-events: none;
+            color: #ffff00;
+            font-weight: 900;
+            font-size: 2.5rem;
+            z-index: 9999;
+            text-shadow: 3px 3px 0 #ff0000, -3px -3px 0 #00ffff;
+            animation: boomUp 0.5s ease-out forwards;
+        }
+
+        @keyframes boomUp {
+            0% { transform: scale(0.5) rotate(-20deg); opacity: 1; }
+            100% { transform: scale(2.2) translateY(-80px) rotate(20deg); opacity: 0; }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            border-radius: 50%;
+            animation: fly 0.6s ease-out forwards;
+        }
+
+        @keyframes fly {
+            to {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* --- Timetable Table Styling --- */
+        .timetable-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        table.timetable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            min-width: 800px;
+        }
+
+        table.timetable th {
+            background: rgba(30, 30, 40, 0.9);
+            color: #00ffff;
+            padding: 12px 8px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border-radius: 8px;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        table.timetable td {
+            vertical-align: top;
+            padding: 6px;
+            border-radius: 8px;
+            background: rgba(15, 15, 22, 0.6);
+            transition: all 0.2s;
+            height: 75px;
+            min-width: 110px;
+        }
+
+        table.timetable td.period-header {
+            background: rgba(255, 255, 255, 0.07);
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Lesson Card Inside Cell */
+        .lesson-box {
+            height: 100%;
+            padding: 6px 8px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 0.82rem;
+            line-height: 1.25;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .lesson-box:hover {
+            transform: scale(1.04);
+            z-index: 5;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        body.manager-mode-active table.timetable td:not(.period-header) {
+            cursor: pointer;
+            position: relative;
+        }
+
+        body.manager-mode-active table.timetable td:not(.period-header):hover {
+            outline: 2px dashed #00ffff;
+            outline-offset: -2px;
+        }
+
+        .lesson-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .lesson-teacher {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        /* Color Badges based on Schedule Image */
+        .bg-green-subject { background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #6ee7b7; }
+        .bg-red-subject { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #fca5a5; }
+        .bg-yellow-subject { background: rgba(234, 179, 8, 0.25); border-color: #eab308; color: #fde047; }
+        .bg-cyan-subject { background: rgba(6, 182, 212, 0.25); border-color: #06b6d4; color: #67e8f9; }
+        .bg-orange-subject { background: rgba(249, 115, 22, 0.25); border-color: #f97316; color: #fdba74; }
+        .bg-purple-subject { background: rgba(168, 85, 247, 0.25); border-color: #a855f7; color: #f0abfc; }
+        .bg-pink-subject { background: rgba(236, 72, 153, 0.25); border-color: #ec4899; color: #fbcfe8; }
+        .bg-blue-subject { background: rgba(59, 130, 246, 0.25); border-color: #3b82f6; color: #93c5fd; }
+        .bg-grey-subject { background: rgba(148, 163, 184, 0.2); border-color: #94a3b8; color: #cbd5e1; }
+
+        /* Day Tab Buttons */
+        .day-tab {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid #444;
+            color: #ccc;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .day-tab.active, .day-tab:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(0, 251, 255, 0.5);
+        }
+
+        .current-lesson-highlight {
+            animation: activeGlow 1.5s infinite alternate;
+            border-width: 2px !important;
+        }
+
+        @keyframes activeGlow {
+            from { box-shadow: 0 0 8px #00ffff; }
+            to { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff; }
+        }
+
+        /* --- Admin Login & Editor Modals --- */
+        .admin-login-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 20000;
+            padding: 11px 18px;
+            border: 1px solid #00ffff;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #00ffff;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 0 14px rgba(0,255,255,.35);
+            transition: .2s;
+        }
+        .admin-login-btn:hover {
+            background: #00ffff;
+            color: #000;
+            transform: scale(1.04);
+        }
+        .admin-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 30000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.78);
+            backdrop-filter: blur(8px);
+        }
+        .admin-modal.show { display: flex; }
+        .admin-box {
+            width: min(520px, 95vw);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #111118;
+            border: 2px solid #00ffff;
+            border-radius: 22px;
+            padding: 25px;
+            box-shadow: 0 0 35px rgba(0,255,255,.35);
+        }
+        .admin-box h2 { color: #00ffff; margin-bottom: 18px; }
+        .admin-field {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0 12px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: #09090d;
+            color: white;
+            outline: none;
+            cursor: text;
+            user-select: text;
+        }
+        .admin-field:focus { border-color: #00ffff; box-shadow: 0 0 10px rgba(0,255,255,.25); }
+        .admin-action {
+            padding: 11px 15px;
+            border: 0;
+            border-radius: 10px;
+            margin: 4px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .admin-primary { background: #00ffff; color: #000; }
+        .admin-secondary { background: #333344; color: #fff; }
+        .admin-danger { background: #ef4444; color: white; }
+        .admin-success { color: #6ee7b7; min-height: 22px; margin: 8px 0; }
+        .admin-editor { display: none; }
+        .admin-editor.show { display: block; }
+        .admin-row {
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .admin-row-title { color: #fde047; font-weight: 800; margin-bottom: 6px; }
+
+        /* Manager Mode Styles */
+        .manager-bar{
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            z-index:40000;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            flex-wrap:wrap;
+            padding:10px;
+            background:rgba(8,8,14,.96);
+            border-bottom:2px solid #00ffff;
+            box-shadow:0 0 22px rgba(0,255,255,.28);
+            direction:rtl;
+        }
+        .manager-bar.show{display:flex}
+        .manager-bar strong{color:#00ffff;margin:0 8px}
+        .manager-bar button{
+            border:0;
+            border-radius:9px;
+            padding:9px 13px;
+            font-weight:800;
+            cursor:pointer;
+        }
+        .manager-save{background:#00ffff;color:#000}
+        .manager-exit{background:#ef4444;color:#fff}
+        .manager-add{background:#a855f7;color:#fff}
+        .manager-editable.editing{
+            outline:2px dashed #00ffff;
+            outline-offset:4px;
+            cursor:text;
+        }
+        .manager-hint{
+            position:fixed;
+            bottom:18px;
+            right:18px;
+            z-index:39999;
+            display:none;
+            max-width:360px;
+            padding:10px 14px;
+            border-radius:12px;
+            background:rgba(0,0,0,.9);
+            border:1px solid #00ffff;
+            color:#fff;
+            font-size:14px;
+        }
+        .manager-hint.show{display:block}
+    </style>
+
+    <style id="manager-skill-lock-style">
+        body.manager-mode-active .life-skills-locked {
+            pointer-events: none !important;
+            cursor: not-allowed !important;
+            opacity: .55 !important;
+        }
+        body.manager-mode-active .life-skills-locked * {
+            pointer-events: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="managerBar" class="manager-bar">
+    <strong>🛠️ מצב מנהל פעיל</strong>
+    <button class="manager-add" id="managerAddLink">➕ הוסף קישור</button>
+    <button class="manager-save" id="managerSave">💾 שמור שינויים</button>
+    <button class="manager-exit" id="managerExit">🚪 יציאה ממצב מנהל</button>
+</div>
+<div id="managerHint" class="manager-hint">✏️ מצב מנהל פעיל — לחץ על טקסט או על שיעור במערכת כדי לערוך.</div>
+
+<button id="adminLoginButton" class="admin-login-btn">🔐 כניסת מנהל</button>
+
+<div id="adminModal" class="admin-modal">
+    <div class="admin-box">
+        <div id="loginPanel">
+            <h2>🔐 כניסת מנהל</h2>
+            <p class="text-gray-400 mb-3">הזן שם משתמש וסיסמה כדי לערוך את האתר.</p>
+            <input id="adminUsername" class="admin-field" type="text" placeholder="שם משתמש" autocomplete="username">
+            <input id="adminPassword" class="admin-field" type="password" placeholder="סיסמה" autocomplete="current-password">
+            <div id="loginMessage" class="admin-success"></div>
+            <button id="loginSubmit" class="admin-action admin-primary">כניסה</button>
+            <button id="loginClose" class="admin-action admin-secondary">סגור</button>
+        </div>
+
+        <div id="adminEditor" class="admin-editor">
+            <h2>🛠️ פאנל ניהול</h2>
+            <p class="text-gray-400 mb-3">כאן אפשר לשנות את הכותרת, להוסיף קישורים ולמחוק קישורים שהוספת.</p>
+
+            <label>כותרת האתר</label>
+            <input id="editTitle" class="admin-field" type="text">
+
+            <label>הטקסט שמתחת לכותרת</label>
+            <input id="editSubtitle" class="admin-field" type="text">
+
+            <button id="saveSiteText" class="admin-action admin-primary">💾 שמור שינויים</button>
+
+            <hr style="border-color:#333; margin:18px 0;">
+
+            <h3 class="text-cyan-300 font-bold mb-2">➕ הוסף קישור חדש</h3>
+            <input id="newLinkText" class="admin-field" type="text" placeholder="שם הקישור">
+            <input id="newLinkUrl" class="admin-field" type="url" placeholder="https://example.com">
+            <button id="addLink" class="admin-action admin-primary">הוסף קישור</button>
+
+            <div id="customLinksList"></div>
+
+            <hr style="border-color:#333; margin:18px 0;">
+
+            <button id="logoutAdmin" class="admin-action admin-danger">יציאה ממנהל</button>
+            <button id="adminClose" class="admin-action admin-secondary">סגור</button>
+        </div>
+    </div>
+</div>
+
+<div id="flash"></div>
+<div id="particles-js"></div>
+
+<!-- Add Link Modal for Manager Mode -->
+<div id="addLinkModal" class="admin-modal">
+    <div class="admin-box">
+        <h2 style="color:#00ffff; margin-bottom:15px; font-weight:800; font-size:1.4rem;">➕ הוספת קישור חדש</h2>
+        
+        <label class="text-sm font-bold text-gray-300">שם הקישור</label>
+        <input id="modalLinkText" class="admin-field" type="text" placeholder="לדוגמה: דף תרגול במתמטיקה">
+        
+        <label class="text-sm font-bold text-gray-300">כתובת הקישור (URL)</label>
+        <input id="modalLinkUrl" class="admin-field" type="url" placeholder="https://example.com">
+        
+        <label class="text-sm font-bold text-gray-300">בחירת קטגוריה</label>
+        <select id="modalLinkCategory" class="admin-field">
+            <option value="live">🎥 שיעורי LIVE</option>
+            <option value="materials">📚 חומרי לימוד</option>
+            <option value="management" selected>🛠️ ניהול וקישורים</option>
+        </select>
+        
+        <label class="text-sm font-bold text-gray-300">בחירת צבע הקישור</label>
+        <div class="flex items-center gap-3 my-2 flex-wrap">
+            <input id="modalLinkColor" type="color" value="#00fbff" class="w-10 h-10 rounded cursor-pointer border-0 bg-transparent">
+            <span class="text-xs text-gray-400">ערכות צבעים מהירות:</span>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#00fbff'" class="w-6 h-6 rounded-full border border-white" style="background:#00fbff;" title="טורקיז"></button>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#ff00ff'" class="w-6 h-6 rounded-full border border-white" style="background:#ff00ff;" title="וורוד"></button>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#ffff00'" class="w-6 h-6 rounded-full border border-white" style="background:#ffff00;" title="צהוב"></button>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#00ff66'" class="w-6 h-6 rounded-full border border-white" style="background:#00ff66;" title="ירוק"></button>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#a855f7'" class="w-6 h-6 rounded-full border border-white" style="background:#a855f7;" title="סגול"></button>
+            <button type="button" onclick="document.getElementById('modalLinkColor').value='#f97316'" class="w-6 h-6 rounded-full border border-white" style="background:#f97316;" title="כתום"></button>
+        </div>
+        
+        <div id="addLinkError" class="text-red-400 text-sm my-2 hidden"></div>
+
+        <div class="flex gap-2 mt-4">
+            <button id="saveModalLink" class="admin-action admin-primary flex-1">➕ הוסף קישור</button>
+            <button id="closeModalLink" class="admin-action admin-secondary">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Lesson Modal for Timetable Editing in Manager Mode -->
+<div id="editLessonModal" class="admin-modal">
+    <div class="admin-box">
+        <h2 style="color:#00ffff; margin-bottom:15px; font-weight:800; font-size:1.4rem;">✏️ עריכת שיעור במערכת</h2>
+        <p id="editLessonMeta" class="text-xs text-gray-400 mb-3"></p>
+        
+        <label class="text-sm font-bold text-gray-300">שם השיעור / מקצוע</label>
+        <input id="editLessonTitle" class="admin-field" type="text" placeholder="לדוגמה: מתמטיקה ח1">
+        
+        <label class="text-sm font-bold text-gray-300">שם המורה</label>
+        <input id="editLessonTeacher" class="admin-field" type="text" placeholder="לדוגמה: איתי יוגב">
+
+        <label class="text-sm font-bold text-gray-300">פירוט נוסף / הערה (אופציונלי)</label>
+        <input id="editLessonSub" class="admin-field" type="text" placeholder="לדוגמה: כיתה 202">
+        
+        <label class="text-sm font-bold text-gray-300">בחירת צבע / עיצוב השיעור</label>
+        <select id="editLessonColor" class="admin-field">
+            <option value="bg-green-subject">🟢 ירוק (תפילה / הלכה / היסטוריה)</option>
+            <option value="bg-red-subject">🔴 אדום (גמרא)</option>
+            <option value="bg-yellow-subject">🟡 צהוב (מתמטיקה / מדעים)</option>
+            <option value="bg-cyan-subject">🩵 תכלת (חינוך)</option>
+            <option value="bg-orange-subject">🟠 כתום (תורה / גיאוגרפיה / מחשבים)</option>
+            <option value="bg-purple-subject">🟣 סגול (ספרות / סרטוט / חינוך גופני)</option>
+            <option value="bg-pink-subject">🩷 ורוד (פיזיקה / נביא)</option>
+            <option value="bg-blue-subject">🔵 כחול (לשון)</option>
+            <option value="bg-grey-subject">⚪ אפור (אנגלית / הייטייסט / מרכז לומד)</option>
+        </select>
+
+        <div class="flex gap-2 mt-4 flex-wrap">
+            <button id="saveLessonBtn" class="admin-action admin-primary flex-1">💾 שמור שיעור</button>
+            <button id="clearLessonBtn" class="admin-action admin-danger">🗑️ מחק שיעור</button>
+            <button id="closeLessonBtn" class="admin-action admin-secondary">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<header>
+    <h1>Study Hub</h1>
+    <p class="text-cyan-300 font-bold tracking-widest text-lg">מערכת ימי זום יתמ"ל 🚀 | כיתה ח'1</p>
+</header>
+
+<div class="container">
+    <!-- Top Cards Row -->
+    <div class="top-cards-grid">
+        <div class="card">
+            <h2>🎥 שיעורי LIVE</h2>
+            <a href="https://edu-il.zoom.us/j/81703807405?pwd=oe1KBeDr5hsiQEqvGagbJRqbi3k9p5.1" target="_blank" class="btn-link">זום שיעור 1 ⚡</a>
+            <a href="https://edu-il.zoom.us/j/88575864095?pwd=ambDHYTdm0ZaEczUspcXBDbcSbtx1u.1" target="_blank" class="btn-link">כניסה לשיעור של ח 🔥</a>
+            <div id="customLinksLive"></div>
+        </div>
+
+        <div class="card">
+            <h2>📚 חומרי לימוד</h2>
+            <a href="#" class="btn-link">📄 תרגול פונקציות</a>
+            <a href="#" class="btn-link">📈 דף עבודה גרפים</a>
+            <div id="customLinksMaterials"></div>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ ניהול וקישורים</h2>
+            <a href="https://docs.google.com/spreadsheets/d/1aclLW1iI6xDrLMD1NfFMrGIfUOlVXE9Kb-39cDQyYRQ/edit?gid=0#gid=0" target="_blank" class="btn-link">📅 לו"ז שבועי בגוגל דרייב</a>
+            <a href="https://web.mashov.info/students/login" target="_blank" class="btn-link mashov-special">👑 כניסה למשוב 👑</a>
+            <div id="customLinksContainer"></div>
+        </div>
+    </div>
+
+    <!-- Schedule Section -->
+    <div class="card w-full mt-2">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+                <h2 class="text-2xl font-extrabold text-cyan-300 m-0">📅 מערכת שעות שבועית - ח'1</h2>
+                <p class="text-xs text-gray-400 mt-1">לחץ/י על יום לסינון מהיר או חפש/י שיעור ומורה</p>
+            </div>
+
+            <!-- Controls: Search & Tabs -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                <input type="text" id="scheduleSearch" placeholder="🔍 חפש מקצוע / מורה..." 
+                       class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg px-3 py-2 outline-none focus:border-cyan-400 w-full md:w-48 transition">
+            </div>
+        </div>
+
+        <!-- Day Filter Tabs -->
+        <div class="flex flex-wrap gap-2 mb-5" id="dayTabsContainer">
+            <button class="day-tab active" data-day="all">הכל</button>
+            <button class="day-tab" data-day="0">ראשון</button>
+            <button class="day-tab" data-day="1">שני</button>
+            <button class="day-tab" data-day="2">שלישי</button>
+            <button class="day-tab" data-day="3">רביעי</button>
+            <button class="day-tab" data-day="4">חמישי</button>
+            <button class="day-tab" data-day="5">שישי</button>
+        </div>
+
+        <!-- Timetable Graphic Table -->
+        <div class="timetable-wrapper">
+            <table class="timetable" id="timetableGrid">
+                <thead>
+                    <tr>
+                        <th style="width: 110px;">שיעור / שעה</th>
+                        <th class="day-col-0">ראשון</th>
+                        <th class="day-col-1">שני</th>
+                        <th class="day-col-2">שלישי</th>
+                        <th class="day-col-3">רביעי</th>
+                        <th class="day-col-4">חמישי</th>
+                        <th class="day-col-5">שישי</th>
+                    </tr>
+                </thead>
+                <tbody id="timetableBody">
+                    <!-- Dynamic JavaScript insertion -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    const dayNames = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי"];
+
+    // Timetable Base Data
+    const scheduleData = [
+        {
+            period: "0",
+            time: "07:00 - 08:45",
+            lessons: [
+                { day: 0, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject", sub: "תפילה ז1-ח1 (אורן ליאון)" },
+                { day: 1, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject", sub: "תפילה ז1-ח1 (אורן ליאון)" },
+                { day: 2, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject", sub: "תפילה ז1-ח1 (אורן ליאון)" },
+                { day: 3, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject", sub: "תפילה ז1-ח1 (אורן ליאון)" },
+                { day: 4, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject", sub: "תפילה ז1-ח1 (אורן ליאון)" },
+                { day: 5, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject" }
+            ]
+        },
+        {
+            period: "1",
+            time: "08:45 - 09:25",
+            lessons: [
+                { day: 0, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 1, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 2, title: "מדעים ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 3, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 4, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 5, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" }
+            ]
+        },
+        {
+            period: "2",
+            time: "09:25 - 10:05",
+            lessons: [
+                { day: 0, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 1, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 2, title: "מדעים ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 3, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 4, title: "גמרא ח1", teacher: "הרב יאיר מירון", color: "bg-red-subject" },
+                { day: 5, title: "חינוך ח1", teacher: "הרב יאיר מירון", color: "bg-cyan-subject" }
+            ]
+        },
+        {
+            period: "3",
+            time: "10:20 - 11:00",
+            lessons: [
+                { day: 0, title: "אנגלית ח1", teacher: "דב בן הקון", color: "bg-grey-subject" },
+                { day: 1, title: "הלכה ח1", teacher: "דב בן הקון", color: "bg-green-subject" },
+                { day: 2, title: "ספרות ח1", teacher: "הרב בן ציון אלול", color: "bg-purple-subject" },
+                { day: 3, title: "גיאוגרפיה ח1", teacher: "הרב ארנון ארד", color: "bg-orange-subject" },
+                { day: 4, title: "מרכז לומד", teacher: "-", color: "bg-grey-subject" },
+                { day: 5, title: "תורה ח1", teacher: "הרב יאיר מירון", color: "bg-orange-subject" }
+            ]
+        },
+        {
+            period: "4",
+            time: "11:00 - 11:40",
+            lessons: [
+                { day: 0, title: "אנגלית ח1", teacher: "דב בן הקון", color: "bg-grey-subject" },
+                { day: 1, title: "מדעים ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 2, title: "מבנה המחשב", teacher: "הרב אברהם קלמנטינובסקי", color: "bg-orange-subject" },
+                { day: 3, title: "היסטוריה ח1", teacher: "אלחנן יהודה סמואל", color: "bg-green-subject" },
+                { day: 4, title: "מרכז לומד", teacher: "-", color: "bg-grey-subject" },
+                { day: 5, title: "תורה ח1", teacher: "הרב יאיר מירון", color: "bg-orange-subject" }
+            ]
+        },
+        {
+            period: "5",
+            time: "11:50 - 12:30",
+            lessons: [
+                { day: 0, title: "לשון ח1", teacher: "מתניה בן ציון טוייבר", color: "bg-blue-subject" },
+                { day: 1, title: "מתמטיקה ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 2, title: "מתמטיקה ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 3, title: "חינוך ח1", teacher: "הרב יאיר מירון", color: "bg-cyan-subject" },
+                { day: 4, title: "הייטייסט", teacher: "-", color: "bg-grey-subject" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        },
+        {
+            period: "6",
+            time: "12:30 - 13:15",
+            lessons: [
+                { day: 0, title: "לשון ח1", teacher: "מתניה בן ציון טוייבר", color: "bg-blue-subject" },
+                { day: 1, title: "מתמטיקה ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 2, title: "אנגלית ח1", teacher: "דב בן הקון", color: "bg-grey-subject" },
+                { day: 3, title: "מבנה המחשב", teacher: "הרב אברהם קלמנטינובסקי", color: "bg-orange-subject" },
+                { day: 4, title: "הייטייסט", teacher: "-", color: "bg-grey-subject" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        },
+        {
+            period: "7",
+            time: "13:15 - 14:30",
+            lessons: [
+                { day: 0, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject" },
+                { day: 1, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject" },
+                { day: 2, title: "אנגלית / תפילה", teacher: "דב בן הקון / הרב מירון", color: "bg-green-subject" },
+                { day: 3, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject" },
+                { day: 4, title: "תפילה ח1", teacher: "הרב יאיר מירון", color: "bg-green-subject" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        },
+        {
+            period: "8",
+            time: "14:30 - 15:10",
+            lessons: [
+                { day: 0, title: "מתמטיקה ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 1, title: "נביא ח1", teacher: "הרב דוד גיל", color: "bg-pink-subject" },
+                { day: 2, title: "", teacher: "", color: "" },
+                { day: 3, title: "פיזיקה ח1", teacher: "נועם כהן", color: "bg-pink-subject" },
+                { day: 4, title: "סרטוט ממוחשב", teacher: "נחמיה מרגלית", color: "bg-purple-subject" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        },
+        {
+            period: "9",
+            time: "15:15 - 16:00",
+            lessons: [
+                { day: 0, title: "מתמטיקה ח1", teacher: "איתי יוגב", color: "bg-yellow-subject" },
+                { day: 1, title: "חינוך גופני", teacher: "שי חסידים", color: "bg-purple-subject" },
+                { day: 2, title: "", teacher: "", color: "" },
+                { day: 3, title: "פיזיקה ח1", teacher: "נועם כהן", color: "bg-pink-subject" },
+                { day: 4, title: "סרטוט ממוחשב", teacher: "נחמיה מרגלית", color: "bg-purple-subject" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        },
+        {
+            period: "10",
+            time: "16:15 - 17:00",
+            lessons: [
+                { day: 0, title: "היסטוריה ח1", teacher: "אלחנן יהודה סמואל", color: "bg-green-subject" },
+                { day: 1, title: "כישורי חיים", teacher: "יעל קטי דוניר", color: "bg-red-subject" },
+                { day: 2, title: "", teacher: "", color: "" },
+                { day: 3, title: "", teacher: "", color: "" },
+                { day: 4, title: "", teacher: "", color: "" },
+                { day: 5, title: "", teacher: "", color: "" }
+            ]
+        }
+    ];
+
+    function getAdminData() {
+        return JSON.parse(localStorage.getItem("studyHubAdminData") || '{"customLinks":[],"timetableEdits":{}}');
+    }
+    function saveAdminData(data) {
+        localStorage.setItem("studyHubAdminData", JSON.stringify(data));
+    }
+
+    // Get active lesson data (merging default scheduleData with user edits)
+    function getLessonData(period, day) {
+        const data = getAdminData();
+        const edits = data.timetableEdits || {};
+        const key = `${period}_${day}`;
+        if (edits[key] !== undefined) {
+            return edits[key];
+        }
+        const row = scheduleData.find(r => r.period === String(period));
+        if (row && row.lessons) {
+            const found = row.lessons.find(l => l.day === day);
+            return found ? { ...found } : { title: "", teacher: "", color: "", sub: "" };
+        }
+        return { title: "", teacher: "", color: "", sub: "" };
+    }
+
+    // Render Table Function
+    function renderTimetable(filterDay = "all", searchQuery = "") {
+        const tbody = document.getElementById('timetableBody');
+        tbody.innerHTML = "";
+
+        scheduleData.forEach(row => {
+            const tr = document.createElement('tr');
+
+            // Period cell
+            const periodTd = document.createElement('td');
+            periodTd.className = "period-header";
+            periodTd.innerHTML = `<span class="text-cyan-400 font-extrabold text-base">${row.period}</span><span>${row.time}</span>`;
+            tr.appendChild(periodTd);
+
+            // Day cells (0 to 5 for Sunday to Friday)
+            for (let d = 0; d < 6; d++) {
+                const td = document.createElement('td');
+                td.className = `day-col-${d}`;
+                td.dataset.period = row.period;
+                td.dataset.day = d;
+
+                // Check day filter
+                if (filterDay !== "all" && parseInt(filterDay) !== d) {
+                    td.style.display = "none";
+                } else {
+                    td.style.display = "";
+                }
+
+                const lesson = getLessonData(row.period, d);
+
+                if (lesson && lesson.title) {
+                    const matchesSearch = searchQuery === "" || 
+                        lesson.title.includes(searchQuery) || 
+                        (lesson.teacher && lesson.teacher.includes(searchQuery));
+
+                    if (matchesSearch) {
+                        const lessonDiv = document.createElement('div');
+                        lessonDiv.className = `lesson-box ${lesson.color || 'bg-grey-subject'}`;
+                        
+                        let content = `<div class="lesson-title">${lesson.title}</div>`;
+                        if (lesson.teacher && lesson.teacher !== "-") {
+                            content += `<div class="lesson-teacher">מורה: ${lesson.teacher}</div>`;
+                        }
+                        if (lesson.sub) {
+                            content += `<div class="text-[10px] opacity-75 mt-0.5">${lesson.sub}</div>`;
+                        }
+                        lessonDiv.innerHTML = content;
+                        td.appendChild(lessonDiv);
+                    } else {
+                        td.innerHTML = `<div class="h-full flex items-center justify-center text-xs text-gray-600 opacity-30">-</div>`;
+                    }
+                } else {
+                    td.innerHTML = `<div class="h-full flex items-center justify-center text-xs text-gray-600 opacity-20">-</div>`;
+                }
+
+                tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+        });
+
+        // Adjust headers based on filterDay
+        for (let d = 0; d < 6; d++) {
+            const headerCol = document.querySelector(`th.day-col-${d}`);
+            if (headerCol) {
+                if (filterDay !== "all" && parseInt(filterDay) !== d) {
+                    headerCol.style.display = "none";
+                } else {
+                    headerCol.style.display = "";
+                }
+            }
+        }
+    }
+
+    // Setup Day Tabs Listener
+    document.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const selectedDay = tab.getAttribute('data-day');
+            const query = document.getElementById('scheduleSearch').value.trim();
+            renderTimetable(selectedDay, query);
+        });
+    });
+
+    // Setup Search Listener
+    document.getElementById('scheduleSearch').addEventListener('input', (e) => {
+        const activeTab = document.querySelector('.day-tab.active');
+        const selectedDay = activeTab ? activeTab.getAttribute('data-day') : "all";
+        renderTimetable(selectedDay, e.target.value.trim());
+    });
+
+    // Initialize particles
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 75 },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.35 },
+            "size": { "value": 2.5 },
+            "line_linked": { "enable": false },
+            "move": { "speed": 2.2, "enable": true }
+        }
+    });
+
+    // Initial Table Render
+    renderTimetable();
+
+    // Explosion Effect on Click
+    const flash = document.getElementById('flash');
+    const texts = ["BOOM!", "POW!", "KABOOM!", "BANG!", "EXPLOSION!", "WOW!", "ח'1 בום!"];
+
+    document.addEventListener('mousedown', (e) => {
+        // Don't trigger explosion on inputs, buttons, inside modals/manager bar, or when any modal is open
+        if (
+            ['INPUT', 'BUTTON', 'A', 'SELECT', 'OPTION', 'TEXTAREA', 'LABEL'].includes(e.target.tagName) ||
+            e.target.closest('.admin-modal') ||
+            e.target.closest('.manager-link-editor') ||
+            e.target.closest('.manager-bar') ||
+            document.querySelector('.admin-modal.show') ||
+            document.querySelector('.manager-link-editor.show')
+        ) return;
+
+        flash.style.opacity = '0.35';
+        setTimeout(() => flash.style.opacity = '0', 50);
+
+        document.body.classList.add('shake-active');
+        setTimeout(() => document.body.classList.remove('shake-active'), 150);
+
+        const boom = document.createElement('div');
+        boom.className = 'boom-text';
+        boom.innerText = texts[Math.floor(Math.random() * texts.length)];
+        boom.style.left = (e.clientX - 50) + 'px';
+        boom.style.top = (e.clientY - 20) + 'px';
+        document.body.appendChild(boom);
+        setTimeout(() => boom.remove(), 500);
+
+        for (let i = 0; i < 16; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 10 + 4;
+            const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#00ff00'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.background = color;
+            p.style.left = e.clientX + 'px';
+            p.style.top = e.clientY + 'px';
+            p.style.boxShadow = `0 0 10px ${color}`;
+            
+            const dx = (Math.random() - 0.5) * 450;
+            const dy = (Math.random() - 0.5) * 450;
+            p.style.setProperty('--dx', dx + 'px');
+            p.style.setProperty('--dy', dy + 'px');
+            
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+        }
+    });
+
+    const ADMIN_USERNAME = "evyatar5181";
+    const ADMIN_PASSWORD = "evyatar2013";
+
+    const adminModal = document.getElementById("adminModal");
+    const loginPanel = document.getElementById("loginPanel");
+    const adminEditor = document.getElementById("adminEditor");
+    const loginMessage = document.getElementById("loginMessage");
+    const managerBar = document.getElementById("managerBar");
+    const managerHint = document.getElementById("managerHint");
+
+    function getContrastColor(hexColor) {
+        if (!hexColor) return "#ffffff";
+        let hex = hexColor.replace("#", "");
+        if (hex.length === 3) hex = hex.split("").map(c => c + c).join("");
+        if (hex.length !== 6) return "#ffffff";
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness > 128 ? "#000000" : "#ffffff";
+    }
+
+    function renderCustomLinks() {
+        const data = getAdminData();
+        const containerMgmt = document.getElementById("customLinksContainer");
+        const containerLive = document.getElementById("customLinksLive");
+        const containerMat = document.getElementById("customLinksMaterials");
+        const list = document.getElementById("customLinksList");
+        
+        if (containerMgmt) containerMgmt.innerHTML = "";
+        if (containerLive) containerLive.innerHTML = "";
+        if (containerMat) containerMat.innerHTML = "";
+        if (list) list.innerHTML = "";
+
+        (data.customLinks || []).forEach((link, index) => {
+            const a = document.createElement("a");
+            a.href = link.url;
+            a.target = "_blank";
+            a.className = "btn-link";
+            a.textContent = link.text;
+            
+            if (link.color) {
+                a.style.backgroundColor = link.color;
+                a.style.borderColor = link.color;
+                a.style.color = getContrastColor(link.color);
+                a.style.boxShadow = `0 0 14px ${link.color}aa`;
+            }
+
+            if (link.category === "live" && containerLive) {
+                containerLive.appendChild(a);
+            } else if (link.category === "materials" && containerMat) {
+                containerMat.appendChild(a);
+            } else if (containerMgmt) {
+                containerMgmt.appendChild(a);
+            }
+
+            if (list) {
+                const row = document.createElement("div");
+                row.className = "admin-row";
+                row.innerHTML = `<div class="admin-row-title">${link.text}</div>
+                                 <div class="text-gray-400 text-sm mb-2">${link.url}</div>`;
+                const del = document.createElement("button");
+                del.className = "admin-action admin-danger";
+                del.textContent = "🗑️ מחק";
+                del.onclick = () => {
+                    const current = getAdminData();
+                    current.customLinks.splice(index, 1);
+                    saveAdminData(current);
+                    renderCustomLinks();
+                };
+                row.appendChild(del);
+                list.appendChild(row);
+            }
+        });
+    }
+
+    function managerElements() {
+        return Array.from(document.querySelectorAll(
+            "header h1, header p, .card h2, .card p, .btn-link, footer p, footer a"
+        )).filter(el => !el.closest("#adminModal") && !el.closest("#managerBar"));
+    }
+
+    function enterManagerMode() {
+        sessionStorage.setItem("studyHubAdminLoggedIn", "true");
+        managerBar.classList.add("show");
+        managerHint.classList.add("show");
+        document.body.classList.add("manager-mode-active");
+
+        managerElements().forEach(el => {
+            el.classList.add("manager-editable");
+            el.contentEditable = "true";
+            el.spellcheck = false;
+            el.addEventListener("click", stopLinkNavigationWhileEditing);
+        });
+    }
+
+    function stopLinkNavigationWhileEditing(e) {
+        if (sessionStorage.getItem("studyHubAdminLoggedIn") === "true") {
+            if (e.target.tagName === "A") e.preventDefault();
+        }
+    }
+
+    function exitManagerMode() {
+        sessionStorage.removeItem("studyHubAdminLoggedIn");
+        managerBar.classList.remove("show");
+        managerHint.classList.remove("show");
+        document.body.classList.remove("manager-mode-active");
+        managerElements().forEach(el => {
+            el.contentEditable = "false";
+            el.classList.remove("manager-editable", "editing");
+        });
+    }
+
+    function saveManagerMode() {
+        const data = getAdminData();
+        data.pageTexts = managerElements().map(el => ({
+            key: getElementKey(el),
+            html: el.innerHTML,
+            text: el.textContent
+        }));
+        saveAdminData(data);
+        managerHint.textContent = "✅ השינויים נשמרו.";
+        setTimeout(() => {
+            managerHint.textContent = "✏️ מצב מנהל פעיל — לחץ על טקסט או על שיעור במערכת כדי לערוך.";
+        }, 1600);
+    }
+
+    function getElementKey(el) {
+        const all = managerElements();
+        return all.indexOf(el);
+    }
+
+    function loadManagerChanges() {
+        const data = getAdminData();
+        if (Array.isArray(data.pageTexts)) {
+            const els = managerElements();
+            data.pageTexts.forEach(item => {
+                const el = els[item.key];
+                if (el && typeof item.html === "string") el.innerHTML = item.html;
+            });
+        }
+        renderCustomLinks();
+    }
+
+    function openAdmin() {
+        adminModal.classList.add("show");
+        const loggedIn = sessionStorage.getItem("studyHubAdminLoggedIn") === "true";
+        if (loggedIn) {
+            adminModal.classList.remove("show");
+            enterManagerMode();
+            return;
+        }
+        loginPanel.style.display = "block";
+        adminEditor.classList.remove("show");
+        loginMessage.textContent = "";
+    }
+
+    document.getElementById("adminLoginButton").addEventListener("click", openAdmin);
+
+    document.getElementById("loginSubmit").addEventListener("click", () => {
+        const username = document.getElementById("adminUsername").value.trim();
+        const password = document.getElementById("adminPassword").value;
+
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            adminModal.classList.remove("show");
+            enterManagerMode();
+        } else {
+            loginMessage.textContent = "❌ שם המשתמש או הסיסמה אינם נכונים.";
+        }
+    });
+
+    document.getElementById("loginClose").addEventListener("click", () => {
+        adminModal.classList.remove("show");
+    });
+
+    document.getElementById("adminClose").addEventListener("click", () => {
+        adminModal.classList.remove("show");
+    });
+
+    document.getElementById("logoutAdmin").addEventListener("click", exitManagerMode);
+
+    document.getElementById("managerSave").addEventListener("click", saveManagerMode);
+    document.getElementById("managerExit").addEventListener("click", () => {
+        saveManagerMode();
+        exitManagerMode();
+    });
+
+    document.getElementById("managerAddLink").addEventListener("click", () => {
+        document.getElementById("modalLinkText").value = "";
+        document.getElementById("modalLinkUrl").value = "";
+        document.getElementById("modalLinkCategory").value = "management";
+        document.getElementById("modalLinkColor").value = "#00fbff";
+        document.getElementById("addLinkError").classList.add("hidden");
+        document.getElementById("addLinkModal").classList.add("show");
+    });
+
+    document.getElementById("closeModalLink").addEventListener("click", () => {
+        document.getElementById("addLinkModal").classList.remove("show");
+    });
+
+    document.getElementById("saveModalLink").addEventListener("click", () => {
+        const text = document.getElementById("modalLinkText").value.trim();
+        const url = document.getElementById("modalLinkUrl").value.trim();
+        const category = document.getElementById("modalLinkCategory").value;
+        const color = document.getElementById("modalLinkColor").value;
+        const errorEl = document.getElementById("addLinkError");
+
+        if (!text || !url) {
+            errorEl.textContent = "❌ אנא מלא גם שם וגם כתובת קישור.";
+            errorEl.classList.remove("hidden");
+            return;
+        }
+
+        const data = getAdminData();
+        data.customLinks = data.customLinks || [];
+        data.customLinks.push({ text, url, category, color });
+        saveAdminData(data);
+        renderCustomLinks();
+
+        document.getElementById("addLinkModal").classList.remove("show");
+        managerHint.textContent = "✅ הקישור נוסף בהצלחה!";
+        setTimeout(() => managerHint.textContent = "✏️ מצב מנהל פעיל — לחץ על טקסט או על שיעור במערכת כדי לערוך.", 1600);
+    });
+
+    let currentEditPeriod = null;
+    let currentEditDay = null;
+
+    // Listen for clicks on the timetable cells when Manager Mode is active
+    document.getElementById("timetableGrid").addEventListener("click", (e) => {
+        if (!document.body.classList.contains("manager-mode-active")) return;
+        
+        const td = e.target.closest("td");
+        if (!td || td.classList.contains("period-header")) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const period = td.dataset.period;
+        const day = parseInt(td.dataset.day, 10);
+        if (period === undefined || isNaN(day)) return;
+
+        currentEditPeriod = period;
+        currentEditDay = day;
+
+        const lesson = getLessonData(period, day);
+
+        document.getElementById("editLessonTitle").value = lesson.title || "";
+        document.getElementById("editLessonTeacher").value = lesson.teacher || "";
+        document.getElementById("editLessonSub").value = lesson.sub || "";
+        document.getElementById("editLessonColor").value = lesson.color || "bg-yellow-subject";
+        
+        document.getElementById("editLessonMeta").textContent = `יום ${dayNames[day]} | שיעור ${period}`;
+        
+        document.getElementById("editLessonModal").classList.add("show");
+    }, true);
+
+    document.getElementById("closeLessonBtn").addEventListener("click", () => {
+        document.getElementById("editLessonModal").classList.remove("show");
+    });
+
+    document.getElementById("saveLessonBtn").addEventListener("click", () => {
+        if (currentEditPeriod === null || currentEditDay === null) return;
+
+        const title = document.getElementById("editLessonTitle").value.trim();
+        const teacher = document.getElementById("editLessonTeacher").value.trim();
+        const sub = document.getElementById("editLessonSub").value.trim();
+        const color = document.getElementById("editLessonColor").value;
+
+        const data = getAdminData();
+        data.timetableEdits = data.timetableEdits || {};
+        
+        const key = `${currentEditPeriod}_${currentEditDay}`;
+        data.timetableEdits[key] = { title, teacher, sub, color };
+        
+        saveAdminData(data);
+        renderTimetable();
+
+        document.getElementById("editLessonModal").classList.remove("show");
+        managerHint.textContent = "✅ השיעור עודכן בהצלחה!";
+        setTimeout(() => {
+            managerHint.textContent = "✏️ מצב מנהל פעיל — לחץ על טקסט או על שיעור במערכת כדי לערוך.";
+        }, 1600);
+    });
+
+    document.getElementById("clearLessonBtn").addEventListener("click", () => {
+        if (currentEditPeriod === null || currentEditDay === null) return;
+
+        const data = getAdminData();
+        data.timetableEdits = data.timetableEdits || {};
+        
+        const key = `${currentEditPeriod}_${currentEditDay}`;
+        data.timetableEdits[key] = { title: "", teacher: "", sub: "", color: "" };
+        
+        saveAdminData(data);
+        renderTimetable();
+
+        document.getElementById("editLessonModal").classList.remove("show");
+        managerHint.textContent = "🗑️ השיעור נמחק מהמערכת.";
+        setTimeout(() => {
+            managerHint.textContent = "✏️ מצב מנהל פעיל — לחץ על טקסט או על שיעור במערכת כדי לערוך.";
+        }, 1600);
+    });
+
+    managerElements().forEach(el => {
+        el.addEventListener("focus", () => el.classList.add("editing"));
+        el.addEventListener("blur", () => el.classList.remove("editing"));
+    });
+
+    // Load saved changes, then restore manager mode if it was active in this tab.
+    loadManagerChanges();
+    if (sessionStorage.getItem("studyHubAdminLoggedIn") === "true") {
+        enterManagerMode();
+    }
+
+    // In manager mode, disable entering "כישורי חיים".
+    function updateLifeSkillsLock() {
+        const managerOn = document.body.classList.contains("manager-mode-active");
+
+        document.querySelectorAll("*").forEach(el => {
+            if (el.children.length === 0 && el.textContent.trim() === "כישורי חיים") {
+                let target = el.closest("a, button");
+                if (!target) return;
+
+                target.classList.toggle("life-skills-locked", managerOn);
+                if (managerOn) {
+                    target.setAttribute("aria-disabled", "true");
+                    target.setAttribute("title", "כישורי חיים חסום במצב מנהל");
+                } else {
+                    target.removeAttribute("aria-disabled");
+                    target.removeAttribute("title");
+                }
+            }
+        });
+    }
+
+    const oldEnterManagerMode = enterManagerMode;
+    enterManagerMode = function() {
+        oldEnterManagerMode();
+        document.body.classList.add("manager-mode-active");
+        setTimeout(updateLifeSkillsLock, 50);
+    };
+
+    const oldExitManagerMode = exitManagerMode;
+    exitManagerMode = function() {
+        oldExitManagerMode();
+        document.body.classList.remove("manager-mode-active");
+        updateLifeSkillsLock();
+    };
+
+    setTimeout(updateLifeSkillsLock, 100);
+</script>
+
+<style id="manager-link-editor-style">
+.manager-link-editor{
+    position:fixed; inset:0; z-index:50000; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,.65); backdrop-filter:blur(5px);
+    direction:rtl;
+}
+.manager-link-editor.show{display:flex}
+.manager-link-box{
+    width:min(420px,92vw); background:#101018; color:#fff;
+    border:2px solid #00ffff; border-radius:18px; padding:22px;
+    box-shadow:0 0 35px rgba(0,255,255,.35);
+}
+.manager-link-box h3{margin:0 0 15px}
+.manager-link-field{
+    width:100%; box-sizing:border-box; padding:11px;
+    margin:6px 0 12px; border-radius:10px;
+    border:1px solid #444; background:#09090d; color:#fff;
+}
+.manager-link-actions{display:flex;gap:8px;justify-content:flex-start;flex-wrap:wrap}
+.manager-link-actions button{
+    border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer
+}
+.manager-link-save{background:#00ffff;color:#000}
+.manager-link-cancel{background:#333344;color:#fff}
+.manager-link-delete{background:#ef4444;color:#fff}
+body.manager-mode-active .manager-link-target{
+    outline:2px dashed #00ffff; outline-offset:3px;
+}
+</style>
+
+<div id="managerLinkEditor" class="manager-link-editor">
+  <div class="manager-link-box">
+    <h3>🔗 עריכת קישור</h3>
+    <label>שם הקישור</label>
+    <input id="managerLinkName" class="manager-link-field" type="text">
+    <label>כתובת הקישור</label>
+    <input id="managerLinkUrl" class="manager-link-field" type="text">
+    <div class="manager-link-actions">
+      <button id="managerLinkSave" class="manager-link-save">💾 שמור</button>
+      <button id="managerLinkCancel" class="manager-link-cancel">ביטול</button>
+      <button id="managerLinkDelete" class="manager-link-delete">🗑️ מחק קישור</button>
+    </div>
+  </div>
+</div>
+
+<script id="manager-link-editor-script">
+(function(){
+  let selectedLink = null;
+  const editor = document.getElementById("managerLinkEditor");
+  const nameInput = document.getElementById("managerLinkName");
+  const urlInput = document.getElementById("managerLinkUrl");
+
+  function isManager(){
+    return document.body.classList.contains("manager-mode-active");
+  }
+
+  function openEditor(link){
+    selectedLink = link;
+    link.classList.add("manager-link-target");
+    nameInput.value = link.textContent.trim();
+    urlInput.value = link.getAttribute("href") || "";
+    editor.classList.add("show");
+    nameInput.focus();
+  }
+
+  function closeEditor(){
+    if(selectedLink) selectedLink.classList.remove("manager-link-target");
+    selectedLink = null;
+    editor.classList.remove("show");
+  }
+
+  function save(){
+    if(!selectedLink) return;
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    if(!name || !url){
+      alert("צריך למלא גם שם וגם קישור.");
+      return;
+    }
+    selectedLink.textContent = name;
+    selectedLink.setAttribute("href", url);
+
+    try {
+      const data = getAdminData();
+      data.linkEdits = data.linkEdits || {};
+      const key = selectedLink.dataset.originalHref || selectedLink.getAttribute("href");
+      data.linkEdits[key] = {text:name, url:url};
+      saveAdminData(data);
+    } catch(e) {}
+
+    closeEditor();
+  }
+
+  function deleteLink(){
+    if(!selectedLink) return;
+    if(!confirm("למחוק את הקישור?")) return;
+    selectedLink.remove();
+    closeEditor();
+  }
+
+  document.addEventListener("click", function(e){
+    if(!isManager()) return;
+    const link = e.target.closest("a");
+    if(!link || link.id === "adminLoginButton" || link.closest("#managerLinkEditor")) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    openEditor(link);
+  }, true);
+
+  document.getElementById("managerLinkSave").addEventListener("click", save);
+  document.getElementById("managerLinkCancel").addEventListener("click", closeEditor);
+  document.getElementById("managerLinkDelete").addEventListener("click", deleteLink);
+
+  editor.addEventListener("click", function(e){
+    if(e.target === editor) closeEditor();
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && editor.classList.contains("show")) closeEditor();
+  });
+})();
+</script>
+
+<script id="manager-link-click-blocker">
+document.addEventListener("click", function(e) {
+    if (!document.body.classList.contains("manager-mode-active")) return;
+    const link = e.target.closest("a");
+    if (!link) return;
+    if (link.closest("#managerLinkEditor")) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+
+    const editor = document.getElementById("managerLinkEditor");
+    const nameInput = document.getElementById("managerLinkName");
+    const urlInput = document.getElementById("managerLinkUrl");
+    if (editor && nameInput && urlInput) {
+        window.__managerSelectedLink = link;
+        link.classList.add("manager-link-target");
+        nameInput.value = link.textContent.trim();
+        urlInput.value = link.getAttribute("href") || "";
+        editor.classList.add("show");
+        nameInput.focus();
+    }
+}, true);
+</script>
+
+<script id="manager-link-final-fix">
+(function(){
+  function setupManagerLinks(){
+    document.querySelectorAll("a").forEach(function(link){
+      if(link.dataset.managerBlockerAttached === "1") return;
+      link.dataset.managerBlockerAttached = "1";
+
+      link.addEventListener("click", function(e){
+        if(sessionStorage.getItem("studyHubAdminLoggedIn") !== "true") return;
+        if(link.closest("#managerLinkEditor")) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        const editor = document.getElementById("managerLinkEditor");
+        const nameInput = document.getElementById("managerLinkName");
+        const urlInput = document.getElementById("managerLinkUrl");
+
+        if(editor && nameInput && urlInput){
+          window.__managerSelectedLink = link;
+          link.classList.add("manager-link-target");
+          nameInput.value = link.textContent.trim();
+          urlInput.value = link.getAttribute("href") || "";
+          editor.classList.add("show");
+          nameInput.focus();
+        }
+        return false;
+      }, true);
+    });
+  }
+
+  setupManagerLinks();
+  new MutationObserver(setupManagerLinks).observe(document.body, {childList:true, subtree:true});
+})();
+</script>
+
+</body>
+</html>
