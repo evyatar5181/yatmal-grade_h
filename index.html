@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STUDY HUB - BOOM Edition</title>
-    <!-- Google Fonts & Tailwind CSS -->
+    <title>yatmal not gatmal</title>
+    <link rel="icon" type="image/x-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_tLHLPQ2ctx90AjwoPTsJs7xtK8aNwZzBOEpA5of7aQ&s=10">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
@@ -46,13 +46,7 @@
 
         /* Explosion Flash Overlay */
         #flash {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 10000;
-            transition: opacity 0.05s;
+            display: none;
         }
 
         /* Entry Animations */
@@ -943,22 +937,27 @@
     // Initialize particles
     particlesJS("particles-js", {
         "particles": {
-            "number": { "value": 75 },
-            "color": { "value": "#ffffff" },
+            "number": { "value": 85 },
+            "color": { "value": ["#00fbff", "#0088ff", "#00ffff", "#1e90ff"] },
             "shape": { "type": "circle" },
-            "opacity": { "value": 0.35 },
-            "size": { "value": 2.5 },
-            "line_linked": { "enable": false },
-            "move": { "speed": 2.2, "enable": true }
+            "opacity": { "value": 0.6 },
+            "size": { "value": 3 },
+            "line_linked": { 
+                "enable": true,
+                "distance": 130,
+                "color": "#00fbff",
+                "opacity": 0.25,
+                "width": 1
+            },
+            "move": { "speed": 2.0, "enable": true }
         }
     });
 
     // Initial Table Render
     renderTimetable();
 
-    // Explosion Effect on Click
+    // Explosion Effect on Click (Particles only, without screen whitewash)
     const flash = document.getElementById('flash');
-    const texts = ["BOOM!", "POW!", "KABOOM!", "BANG!", "EXPLOSION!", "WOW!", "ח'1 בום!"];
 
     document.addEventListener('mousedown', (e) => {
         // Don't trigger explosion on inputs, buttons, inside modals/manager bar, or when any modal is open
@@ -971,25 +970,14 @@
             document.querySelector('.manager-link-editor.show')
         ) return;
 
-        flash.style.opacity = '0.35';
-        setTimeout(() => flash.style.opacity = '0', 50);
-
         document.body.classList.add('shake-active');
         setTimeout(() => document.body.classList.remove('shake-active'), 150);
-
-        const boom = document.createElement('div');
-        boom.className = 'boom-text';
-        boom.innerText = texts[Math.floor(Math.random() * texts.length)];
-        boom.style.left = (e.clientX - 50) + 'px';
-        boom.style.top = (e.clientY - 20) + 'px';
-        document.body.appendChild(boom);
-        setTimeout(() => boom.remove(), 500);
 
         for (let i = 0; i < 16; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             const size = Math.random() * 10 + 4;
-            const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#00ff00'];
+            const colors = ['#00fbff', '#0088ff', '#00ffff', '#3b82f6', '#ff00ff'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             
             p.style.width = size + 'px';
